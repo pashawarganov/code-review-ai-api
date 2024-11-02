@@ -10,19 +10,19 @@ async def get_content_dict(repo_url: str) -> dict:
     return all_files_from_repo(base_url)
 
 
+def content_from_dict_to_str(content_dict: dict) -> str:
+    return "\n".join(
+        f"file: {file}\ncode: {code}"
+        for file, code in content_dict.items()
+    )
+
+
 async def get_review(
         content_dict: dict,
         assigment_description: str,
         candidate_level: str
 ) -> dict:
-    content = ""
-    for file, code in content_dict.items():
-        content += f"""
-            file: {file}
-            code: {code}
-            \n
-        """
-
+    content = content_from_dict_to_str(content_dict)
     response = client.chat.completions.create(
         messages=[
             {
