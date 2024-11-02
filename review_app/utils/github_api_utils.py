@@ -6,17 +6,7 @@ import requests
 
 from settings import settings
 
-GIT_HUB_TOKEN = settings.GITHUB_TOKEN
-
-
-def make_api_url(repo_url: str) -> str:
-    repo_url = repo_url.split("github.com/")[1].replace(".git", "")
-    return f"https://api.github.com/repos/{repo_url}/contents/"
-
-
-headers = {
-    "Authorization": f"token {GIT_HUB_TOKEN}"
-}
+headers = {"Authorization": f"token {settings.GITHUB_TOKEN}"}
 
 analysis_ignore = [  # Ignoring files pattern
     "*.png",
@@ -24,6 +14,11 @@ analysis_ignore = [  # Ignoring files pattern
     "*.git*",
     ".flake*"
 ]
+
+
+def make_api_url(repo_url: str) -> str:
+    repo_url = repo_url.split("github.com/")[1].replace(".git", "")
+    return f"https://api.github.com/repos/{repo_url}/contents/"
 
 
 def get_file_content(file_url: str) -> str:
@@ -63,14 +58,3 @@ def all_files_from_repo(url: str) -> dict:
         repo_content[data["url"]] = file_content
 
     return repo_content
-
-
-if __name__ == "__main__":  # Test script
-    repo_url = "https://github.com/pashawarganov/py-elves-and-dwarves"
-    base_url = make_api_url(repo_url)
-    response = requests.get(base_url, headers=headers)
-    data = response.json()
-    print(data)
-    # a = all_files_from_repo(base_url)
-    # print("---------------")
-    # print(a)
