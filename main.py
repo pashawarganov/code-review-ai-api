@@ -1,13 +1,12 @@
 from fastapi import FastAPI
 
+from review_app import router as review_router
+from settings import settings
+
 app = FastAPI()
+app.include_router(review_router.router)
 
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
-
-
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
+    return {"message": settings.PROJECT_NAME}
