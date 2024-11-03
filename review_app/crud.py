@@ -17,12 +17,17 @@ def content_from_dict_to_str(content_dict: dict) -> str:
     )
 
 
+def get_files(content_dict: dict) -> list:
+    return [file for file in content_dict.keys()]
+
+
 async def get_review(
         content_dict: dict,
         assigment_description: str,
         candidate_level: str
 ) -> dict:
     content = content_from_dict_to_str(content_dict)
+    files = get_files(content_dict)
     response = client.chat.completions.create(
         messages=[
             {
@@ -49,4 +54,7 @@ async def get_review(
         model="llama3-8b-8192",
     )
 
-    return {"message": response.choices[0].message.content}
+    return {
+        "found_files": files,
+        "message": response.choices[0].message.content
+    }
