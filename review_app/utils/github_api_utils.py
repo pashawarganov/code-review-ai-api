@@ -49,7 +49,9 @@ def all_files_from_repo(url: str) -> dict:
             ):
                 continue
             if file["type"] == "dir":
-                all_files_from_repo(f"{url}/" + file["path"])
+                repo_content.update(
+                    all_files_from_repo(f"{url}/" + file["path"])
+                )
             else:
                 file_content = get_file_content(file["url"])
                 repo_content[file["path"]] = file_content
